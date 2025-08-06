@@ -1,6 +1,8 @@
 package game
 
 import (
+	"math"
+
 	"github.com/firefly-zero/firefly-go/firefly"
 	"github.com/orsinium-labs/tinymath"
 )
@@ -41,10 +43,32 @@ func (p *Player) render() {
 	const distance = 60
 	x := firefly.Width/2 + distance*tinymath.Cos(player.Radians())
 	y := firefly.Height/2 - distance*tinymath.Sin(player.Radians())
-	// p.drawTrail(player, x, y, 8)
+	p.drawTrail(player, x, y)
 	firefly.DrawCircle(
 		firefly.P(int(x)-playerR, int(y)-playerR),
 		playerR*2,
+		firefly.Solid(firefly.ColorLightBlue),
+	)
+}
+
+func (p *Player) drawTrail(player firefly.Angle, x, y float32) {
+	r := player.Radians() + math.Pi/2
+	xLeft := x - playerR*tinymath.Cos(r)
+	yLeft := y + playerR*tinymath.Sin(r)
+	xRight := x + playerR*tinymath.Cos(r)
+	yRight := y - playerR*tinymath.Sin(r)
+	oldIndex := p.anglesIndex - (len(p.angles) - 1)
+	if oldIndex < 0 {
+		oldIndex = oldIndex + len(p.angles)
+	}
+	oldPlayer := p.angles[oldIndex]
+	xTrail := x + 100*tinymath.Cos(oldPlayer.Radians())
+	yTrail := y - 100*tinymath.Sin(oldPlayer.Radians())
+
+	firefly.DrawTriangle(
+		firefly.P(int(xLeft), int(yLeft)),
+		firefly.P(int(xRight), int(yRight)),
+		firefly.P(int(xTrail), int(yTrail)),
 		firefly.Solid(firefly.ColorLightBlue),
 	)
 }
