@@ -12,7 +12,7 @@ func newParticles() *Particles {
 func (ps *Particles) update() {
 	for i, p := range ps.items {
 		if p == nil {
-			if ps.delay != 0 {
+			if ps.delay > 0 {
 				continue
 			}
 			p = &Particle{}

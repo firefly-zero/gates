@@ -48,7 +48,7 @@ func (g *Gate) render() {
 			firefly.Width/2-int(g.radius),
 			firefly.Height/2-int(g.radius),
 		),
-		int(g.radius)*2,
+		int(g.radius*2),
 		g.angle,
 		firefly.Radians(math.Pi*3/2),
 		style,

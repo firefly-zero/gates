@@ -12,7 +12,7 @@ func newGates() *Gates {
 func (ps *Gates) update() {
 	for i, p := range ps.items {
 		if p == nil {
-			if ps.delay != 0 {
+			if ps.delay > 0 {
 				continue
 			}
 			p = &Gate{}
@@ -22,7 +22,7 @@ func (ps *Gates) update() {
 		}
 		visible := p.update()
 		if !visible {
-			p.reset()
+			ps.items[i] = nil
 		}
 	}
 	ps.delay--
