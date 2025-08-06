@@ -1,8 +1,6 @@
 package game
 
 import (
-	"math"
-
 	"github.com/firefly-zero/firefly-go/firefly"
 	"github.com/orsinium-labs/tinymath"
 )
@@ -27,11 +25,11 @@ func (p *Player) update() {
 		return
 	}
 	crank := pad.Azimuth()
-	for player.Sub(crank).Radians() > math.Pi {
-		player = player.Sub(firefly.Radians(math.Pi * 2))
+	for player.Sub(crank).Radians() > tinymath.Pi {
+		player = player.Sub(firefly.Radians(tinymath.Tau))
 	}
-	for player.Sub(crank).Radians() < -math.Pi {
-		player = player.Add(firefly.Radians(math.Pi * 2))
+	for player.Sub(crank).Radians() < -tinymath.Pi {
+		player = player.Add(firefly.Radians(tinymath.Tau))
 	}
 	delta := crank.Sub(player).Radians() * 0.4
 	if !tinymath.IsNaN(delta) {
@@ -46,27 +44,18 @@ func (p *Player) update() {
 }
 
 func (p *Player) collides(g *Gate) bool {
-	player := p.angles[p.anglesIndex].Add(firefly.Radians(math.Pi))
-	for player.Add(g.angle).Radians() > math.Pi {
-		player = player.Sub(firefly.Radians(math.Pi * 2))
+	player := p.angles[p.anglesIndex].Normalize().Radians()
+	gate := g.angle.Normalize().Radians()
+	if player < gate {
+		player += tinymath.Tau
 	}
-	for player.Sub(g.angle).Radians() < -math.Pi {
-		player = player.Add(firefly.Radians(math.Pi * 2))
-	}
-	if player.Radians() < g.angle.Radians() {
-		return true
-	}
-	if player.Radians() > g.angle.Radians()+math.Pi {
-		return true
-	}
-	return false
+	return player > gate+tinymath.Pi/2
 }
 
 func (p *Player) render() {
 	player := p.angles[p.anglesIndex]
 	x := firefly.Width/2 + playerOrbit*tinymath.Cos(player.Radians())
 	y := firefly.Height/2 - playerOrbit*tinymath.Sin(player.Radians())
-	p.drawTrail(player, x, y)
 	firefly.DrawCircle(
 		firefly.P(int(x)-playerR, int(y)-playerR),
 		playerR*2,
@@ -76,10 +65,11 @@ func (p *Player) render() {
 			StrokeWidth: 1,
 		},
 	)
+	p.drawTrail(player, x, y)
 }
 
 func (p *Player) drawTrail(player firefly.Angle, x, y float32) {
-	r := player.Radians() + math.Pi/2
+	r := player.Radians() + tinymath.Pi/2
 	xLeft := x - playerR*tinymath.Cos(r)
 	yLeft := y + playerR*tinymath.Sin(r)
 	xRight := x + playerR*tinymath.Cos(r)

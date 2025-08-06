@@ -1,9 +1,8 @@
 package game
 
 import (
-	"math"
-
 	"github.com/firefly-zero/firefly-go/firefly"
+	"github.com/orsinium-labs/tinymath"
 )
 
 type Gate struct {
@@ -28,26 +27,26 @@ func newGate(count int) *Gate {
 
 func getAngle(count int) uint32 {
 	if count == 0 {
-		return 135
+		return 180 + 45
 	}
 	switch count / 10 {
 	case 1:
 		if count%2 == 0 {
-			return 180
+			return 270
 		} else {
 			return 90
 		}
 	case 3:
 		if count%2 == 0 {
-			return 270
-		} else {
 			return 0
+		} else {
+			return 90
 		}
 	case 5:
 		if count%2 == 0 {
-			return 225
+			return 270 + 45
 		} else {
-			return 45
+			return 90 + 45
 		}
 	default:
 		return firefly.GetRandom() % 360
@@ -89,10 +88,10 @@ func (g *Gate) update() bool {
 	newRadius := xRight - xLeft
 	g.radius = newRadius
 	newAngle := g.angle.Radians() + g.angleInc.Radians()
-	if newAngle > math.Pi*2 {
-		newAngle -= math.Pi * 2
+	if newAngle > tinymath.Tau {
+		newAngle -= tinymath.Tau
 	} else if newAngle < 0 {
-		newAngle += math.Pi * 2
+		newAngle += tinymath.Tau
 	}
 	g.angle = firefly.Radians(newAngle)
 	return newRadius <= firefly.Width/2
@@ -111,8 +110,8 @@ func (g *Gate) render() {
 			firefly.Height/2-int(g.radius),
 		),
 		int(g.radius*2),
-		g.angle,
-		firefly.Radians(math.Pi*3/2),
+		g.angle.Neg(),
+		firefly.Radians(tinymath.Pi*3/2),
 		style,
 	)
 }
