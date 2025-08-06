@@ -33,7 +33,7 @@ func (p *Particle) render() {
 	yNext := y + distance*tinymath.Sin(p.angle.Radians())
 
 	line := firefly.LineStyle{
-		Color: firefly.ColorBlue,
+		Color: firefly.ColorDarkBlue,
 		Width: int(distance * (p.scale * 0.5)),
 	}
 	line.Draw(

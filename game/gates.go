@@ -2,7 +2,7 @@ package game
 
 type Gates struct {
 	delay int
-	items [5]*Gate
+	items [6]*Gate
 }
 
 func newGates() *Gates {
