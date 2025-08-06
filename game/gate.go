@@ -25,14 +25,12 @@ func (g *Gate) reset() {
 
 func (g *Gate) update() bool {
 	const x = 0.0
-	const d = 5.0
-	const radius = 5.0
+	const d = 8.0
+	const radius = 8.0
 	g.z = g.z - 0.2
-	xpLeft := (x - radius) * d / g.z
-	xcLeft := xpLeft * 400.0 / 400.0
-	xpRight := (x + radius) * d / g.z
-	xcRight := xpRight * 400.0 / 400.0
-	newRadius := xcRight - xcLeft
+	xLeft := (x - radius) * d / g.z
+	xRight := (x + radius) * d / g.z
+	newRadius := xRight - xLeft
 	g.radius = newRadius
 	g.angle = firefly.Radians(g.angle.Radians() + g.angleIncrement.Radians())
 	return newRadius <= firefly.Width/2
@@ -43,7 +41,8 @@ func (g *Gate) render() {
 	if g.z > 10 {
 		color = firefly.ColorLightGray
 	}
-	style := firefly.Outlined(color, int(g.radius*0.1))
+	width := max(1, int(g.radius*0.1))
+	style := firefly.Outlined(color, width)
 	firefly.DrawArc(
 		firefly.P(
 			firefly.Width/2-int(g.radius),
@@ -51,7 +50,7 @@ func (g *Gate) render() {
 		),
 		int(g.radius)*2,
 		g.angle,
-		firefly.Radians(g.angle.Radians()+math.Pi/2*3),
+		firefly.Radians(math.Pi*3/2),
 		style,
 	)
 }
