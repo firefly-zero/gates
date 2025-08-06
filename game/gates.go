@@ -18,7 +18,7 @@ func (ps *Gates) update() {
 			p = &Gate{}
 			p.reset()
 			ps.items[i] = p
-			ps.delay = 35
+			ps.delay = 45
 		}
 		visible := p.update()
 		if !visible {

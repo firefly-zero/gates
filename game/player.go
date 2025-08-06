@@ -16,20 +16,20 @@ type Player struct {
 }
 
 func (p *Player) update() {
-	// player := p.angles[p.anglesIndex]
+	player := p.angles[p.anglesIndex]
 	pad, touched := firefly.ReadPad(p.peer)
 	if !touched {
 		return
 	}
 	crank := pad.Azimuth()
-	// for player.Sub(crank) > 180 {
-	// 	player = player - 360
-	// }
-	// for player-crank < -180 {
-	// 	player = player + 360
-	// }
-	// player = player + (crank.Sub(player))*0.4
-	player := crank
+	for player.Sub(crank).Radians() > math.Pi {
+		player = player.Sub(firefly.Radians(math.Pi * 2))
+	}
+	for player.Sub(crank).Radians() < -math.Pi {
+		player = player.Add(firefly.Radians(math.Pi * 2))
+	}
+	delta := crank.Sub(player).Radians() * 0.4
+	player = player.Add(firefly.Radians(delta))
 
 	p.anglesIndex = p.anglesIndex + 1
 	if p.anglesIndex >= len(p.angles) {
@@ -47,7 +47,11 @@ func (p *Player) render() {
 	firefly.DrawCircle(
 		firefly.P(int(x)-playerR, int(y)-playerR),
 		playerR*2,
-		firefly.Solid(firefly.ColorLightBlue),
+		firefly.Style{
+			FillColor:   firefly.ColorBlue,
+			StrokeColor: firefly.ColorLightBlue,
+			StrokeWidth: 1,
+		},
 	)
 }
 
@@ -69,6 +73,6 @@ func (p *Player) drawTrail(player firefly.Angle, x, y float32) {
 		firefly.P(int(xLeft), int(yLeft)),
 		firefly.P(int(xRight), int(yRight)),
 		firefly.P(int(xTrail), int(yTrail)),
-		firefly.Solid(firefly.ColorLightBlue),
+		firefly.Solid(firefly.ColorBlue),
 	)
 }
