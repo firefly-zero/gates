@@ -61,21 +61,21 @@ func getAngleInc(count int) float32 {
 	}
 	switch count / 10 {
 	case 0:
-		return .025
+		return .010
 	case 1:
 		return 0
 	case 2:
-		return .033
+		return .025
 	case 3:
 		return 0
 	case 4:
-		return .05
+		return .033
 	case 5:
 		return 0
 	case 6:
-		return .075
+		return .050
 	default:
-		return .1
+		return .075
 	}
 }
 
