@@ -7,20 +7,46 @@ import (
 )
 
 type Gate struct {
-	z              float32
-	radius         float32
-	angle          firefly.Angle
-	angleIncrement firefly.Angle
-	passed         bool
+	z        float32
+	radius   float32
+	angle    firefly.Angle
+	angleInc firefly.Angle
+	passed   bool
 }
 
 func newGate(count int) *Gate {
+	angleInc := float32(randomInt(-100, 100)) * getAngleInc(count)
 	return &Gate{
-		z:              30,
-		radius:         0,
-		angle:          randomAngle(),
-		angleIncrement: firefly.Degrees(float32(randomInt(-100, 100)) * 0.04),
-		passed:         false,
+		z:        30,
+		radius:   0,
+		angle:    randomAngle(),
+		angleInc: firefly.Degrees(angleInc),
+		passed:   false,
+	}
+}
+
+// Get angle rotation speed coefficent for the given gate number.
+func getAngleInc(count int) float32 {
+	if count == 0 {
+		return 0
+	}
+	switch count / 10 {
+	case 0:
+		return .025
+	case 1:
+		return 0
+	case 2:
+		return .033
+	case 3:
+		return 0
+	case 4:
+		return .05
+	case 5:
+		return 0
+	case 6:
+		return .075
+	default:
+		return .1
 	}
 }
 
@@ -33,7 +59,7 @@ func (g *Gate) update() bool {
 	xRight := (x + radius) * d / g.z
 	newRadius := xRight - xLeft
 	g.radius = newRadius
-	newAngle := g.angle.Radians() + g.angleIncrement.Radians()
+	newAngle := g.angle.Radians() + g.angleInc.Radians()
 	if newAngle > math.Pi*2 {
 		newAngle -= math.Pi * 2
 	} else if newAngle < 0 {
