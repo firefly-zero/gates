@@ -15,7 +15,7 @@ func newScore() *Score {
 }
 
 func (s *Score) inc() {
-
+	s.val += 1
 }
 
 func (s *Score) render() {

@@ -19,6 +19,27 @@ func (ps *Players) update() {
 	for _, p := range ps.items {
 		p.update()
 	}
+	g := gates.current
+	if g != nil {
+		if ps.collides(g) {
+			// TODO: game over
+			score.val = 0
+		} else {
+			g.passed = true
+			score.inc()
+		}
+	}
+}
+
+func (ps *Players) collides(g *Gate) bool {
+	for _, p := range ps.items {
+		if p != nil {
+			if p.collides(g) {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func (ps *Players) render() {

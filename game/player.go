@@ -7,7 +7,12 @@ import (
 	"github.com/orsinium-labs/tinymath"
 )
 
-const playerR = 8
+const (
+	// The radius of the circle depicting the player comet.
+	playerR = 8
+	// The radius of the circle on which the player comet rotates.
+	playerOrbit = 60
+)
 
 type Player struct {
 	peer        firefly.Peer
@@ -40,11 +45,27 @@ func (p *Player) update() {
 	p.angles[p.anglesIndex] = player
 }
 
+func (p *Player) collides(g *Gate) bool {
+	player := p.angles[p.anglesIndex].Add(firefly.Radians(math.Pi))
+	for player.Add(g.angle).Radians() > math.Pi {
+		player = player.Sub(firefly.Radians(math.Pi * 2))
+	}
+	for player.Sub(g.angle).Radians() < -math.Pi {
+		player = player.Add(firefly.Radians(math.Pi * 2))
+	}
+	if player.Radians() < g.angle.Radians() {
+		return true
+	}
+	if player.Radians() > g.angle.Radians()+math.Pi {
+		return true
+	}
+	return false
+}
+
 func (p *Player) render() {
 	player := p.angles[p.anglesIndex]
-	const distance = 60
-	x := firefly.Width/2 + distance*tinymath.Cos(player.Radians())
-	y := firefly.Height/2 - distance*tinymath.Sin(player.Radians())
+	x := firefly.Width/2 + playerOrbit*tinymath.Cos(player.Radians())
+	y := firefly.Height/2 - playerOrbit*tinymath.Sin(player.Radians())
 	p.drawTrail(player, x, y)
 	firefly.DrawCircle(
 		firefly.P(int(x)-playerR, int(y)-playerR),

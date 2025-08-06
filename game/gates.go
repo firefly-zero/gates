@@ -1,38 +1,46 @@
 package game
 
 type Gates struct {
+	// Time in frames until the next gate is generated.
 	delay int
+	// The total number of gates generated during the game.
 	count int
 	items [6]*Gate
+	// The gate currently crossing the player's orbit.
+	current *Gate
 }
 
 func newGates() *Gates {
 	return &Gates{}
 }
 
-func (ps *Gates) update() {
-	for i, p := range ps.items {
-		if p == nil {
-			if ps.delay > 0 {
+func (gs *Gates) update() {
+	gs.current = nil
+	for i, g := range gs.items {
+		if g == nil {
+			if gs.delay > 0 {
 				continue
 			}
-			p = newGate(ps.count)
-			ps.items[i] = p
-			ps.delay = 45
-			ps.count++
+			g = newGate(gs.count)
+			gs.items[i] = g
+			gs.delay = 45
+			gs.count++
 		}
-		visible := p.update()
+		visible := g.update()
 		if !visible {
-			ps.items[i] = nil
+			gs.items[i] = nil
+		}
+		if !g.passed && g.radius >= playerOrbit {
+			gs.current = g
 		}
 	}
-	ps.delay--
+	gs.delay--
 }
 
-func (ps *Gates) render() {
-	for _, p := range ps.items {
-		if p != nil {
-			p.render()
+func (gs *Gates) render() {
+	for _, g := range gs.items {
+		if g != nil {
+			g.render()
 		}
 	}
 }
