@@ -15,11 +15,10 @@ type Gate struct {
 }
 
 func (g *Gate) reset() {
-	g.z = 15
+	g.z = 30
 	g.radius = 0
 	g.angle = randomAngle()
-	// g.angleIncrement = firefly.Degrees(float32(firefly.GetRandom()%200-100) * 0.05)
-	g.angleIncrement = firefly.Degrees(0)
+	g.angleIncrement = firefly.Degrees(float32(firefly.GetRandom()%8) - 4)
 	g.passed = false
 }
 
@@ -32,13 +31,19 @@ func (g *Gate) update() bool {
 	xRight := (x + radius) * d / g.z
 	newRadius := xRight - xLeft
 	g.radius = newRadius
-	g.angle = firefly.Radians(g.angle.Radians() + g.angleIncrement.Radians())
+	newAngle := g.angle.Radians() + g.angleIncrement.Radians()
+	if newAngle > math.Pi*2 {
+		newAngle -= math.Pi * 2
+	} else if newAngle < 0 {
+		newAngle += math.Pi * 2
+	}
+	g.angle = firefly.Radians(newAngle)
 	return newRadius <= firefly.Width/2
 }
 
 func (g *Gate) render() {
 	color := firefly.ColorWhite
-	if g.z > 10 {
+	if g.z > 15 {
 		color = firefly.ColorLightGray
 	}
 	width := max(1, int(g.radius*0.1))
