@@ -13,7 +13,7 @@ type Particle struct {
 }
 
 func (p *Particle) reset() {
-	p.angle = firefly.Degrees(float32(firefly.GetRandom() % 360))
+	p.angle = randomAngle()
 	p.pos = 20
 	p.posInc = 2
 	p.scale = float32(firefly.GetRandom()%75+25) * 0.01
