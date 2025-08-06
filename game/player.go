@@ -7,7 +7,7 @@ import (
 
 const (
 	// The radius of the circle depicting the player comet.
-	playerR = 8
+	playerR = 6
 	// The radius of the circle on which the player comet rotates.
 	playerOrbit = 60
 )
@@ -74,7 +74,7 @@ func (p *Player) drawTrail(player firefly.Angle, x, y float32) {
 	yLeft := y + playerR*tinymath.Sin(r)
 	xRight := x + playerR*tinymath.Cos(r)
 	yRight := y - playerR*tinymath.Sin(r)
-	oldIndex := p.anglesIndex - (len(p.angles) - 1)
+	oldIndex := p.anglesIndex - (len(p.angles) - 2)
 	if oldIndex < 0 {
 		oldIndex = oldIndex + len(p.angles)
 	}
