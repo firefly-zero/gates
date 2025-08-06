@@ -29,7 +29,9 @@ func (p *Player) update() {
 		player = player.Add(firefly.Radians(math.Pi * 2))
 	}
 	delta := crank.Sub(player).Radians() * 0.4
-	player = player.Add(firefly.Radians(delta))
+	if !tinymath.IsNaN(delta) {
+		player = player.Add(firefly.Radians(delta))
+	}
 
 	p.anglesIndex = p.anglesIndex + 1
 	if p.anglesIndex >= len(p.angles) {

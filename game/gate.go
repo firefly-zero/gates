@@ -14,12 +14,14 @@ type Gate struct {
 	passed         bool
 }
 
-func (g *Gate) reset() {
-	g.z = 30
-	g.radius = 0
-	g.angle = randomAngle()
-	g.angleIncrement = firefly.Degrees(float32(firefly.GetRandom()%8) - 4)
-	g.passed = false
+func newGate(count int) *Gate {
+	return &Gate{
+		z:              30,
+		radius:         0,
+		angle:          randomAngle(),
+		angleIncrement: firefly.Degrees(float32(randomInt(-100, 100)) * 0.04),
+		passed:         false,
+	}
 }
 
 func (g *Gate) update() bool {
@@ -58,8 +60,4 @@ func (g *Gate) render() {
 		firefly.Radians(math.Pi*3/2),
 		style,
 	)
-}
-
-func randomAngle() firefly.Angle {
-	return firefly.Degrees(float32(firefly.GetRandom() % 360))
 }

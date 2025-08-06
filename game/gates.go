@@ -2,6 +2,7 @@ package game
 
 type Gates struct {
 	delay int
+	count int
 	items [6]*Gate
 }
 
@@ -15,10 +16,10 @@ func (ps *Gates) update() {
 			if ps.delay > 0 {
 				continue
 			}
-			p = &Gate{}
-			p.reset()
+			p = newGate(ps.count)
 			ps.items[i] = p
 			ps.delay = 45
+			ps.count++
 		}
 		visible := p.update()
 		if !visible {

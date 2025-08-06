@@ -16,7 +16,7 @@ func (p *Particle) reset() {
 	p.angle = randomAngle()
 	p.pos = 20
 	p.posInc = 2
-	p.scale = float32(firefly.GetRandom()%75+25) * 0.01
+	p.scale = float32(randomUint(25, 100)) * 0.01
 }
 
 func (p *Particle) update() bool {
