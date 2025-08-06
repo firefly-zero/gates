@@ -16,12 +16,41 @@ type Gate struct {
 
 func newGate(count int) *Gate {
 	angleInc := float32(randomInt(-100, 100)) * getAngleInc(count)
+	angle := float32(getAngle(count))
 	return &Gate{
 		z:        30,
 		radius:   0,
-		angle:    randomAngle(),
+		angle:    firefly.Degrees(angle),
 		angleInc: firefly.Degrees(angleInc),
 		passed:   false,
+	}
+}
+
+func getAngle(count int) uint32 {
+	if count == 0 {
+		return 135
+	}
+	switch count / 10 {
+	case 1:
+		if count%2 == 0 {
+			return 180
+		} else {
+			return 90
+		}
+	case 3:
+		if count%2 == 0 {
+			return 270
+		} else {
+			return 0
+		}
+	case 5:
+		if count%2 == 0 {
+			return 225
+		} else {
+			return 45
+		}
+	default:
+		return firefly.GetRandom() % 360
 	}
 }
 
