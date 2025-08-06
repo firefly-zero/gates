@@ -15,7 +15,7 @@ type Particle struct {
 func (p *Particle) reset() {
 	p.angle = randomAngle()
 	p.pos = 20
-	p.posInc = 2
+	p.posInc = 1.5
 	p.scale = float32(randomUint(25, 100)) * 0.01
 }
 

@@ -7,6 +7,7 @@ var (
 	particles *Particles
 	gates     *Gates
 	players   *Players
+	score     *Score
 )
 
 func Boot() {
@@ -24,6 +25,7 @@ func Render() {
 	firefly.ClearScreen(firefly.ColorBlack)
 	particles.render()
 	gates.render()
+	score.render()
 	players.render()
 }
 
@@ -31,4 +33,5 @@ func resetGame() {
 	particles = newParticles()
 	gates = newGates()
 	players = newPlayers()
+	score = newScore()
 }
