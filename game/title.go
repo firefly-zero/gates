@@ -35,7 +35,7 @@ func (t *Title) render() {
 		font.Draw(t, p, firefly.ColorWhite)
 	}
 
-	{
+	if score != nil {
 		t := "score: " + formatInt(score.val)
 		p := firefly.P((firefly.Width-font.LineWidth(t))/2, font.CharHeight()*2+12)
 		font.Draw(t, p, firefly.ColorLightGray)
