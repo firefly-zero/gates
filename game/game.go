@@ -8,6 +8,7 @@ var (
 	gates     *Gates
 	players   *Players
 	score     *Score
+	title     *Title
 )
 
 func Boot() {
@@ -16,6 +17,10 @@ func Boot() {
 }
 
 func Update() {
+	if title != nil {
+		title.update()
+		return
+	}
 	particles.update()
 	gates.update()
 	players.update()
@@ -23,6 +28,10 @@ func Update() {
 
 func Render() {
 	firefly.ClearScreen(firefly.ColorBlack)
+	if title != nil {
+		title.render()
+		return
+	}
 	particles.render()
 	gates.render()
 	score.render()
@@ -34,4 +43,5 @@ func resetGame() {
 	gates = newGates()
 	players = newPlayers()
 	score = newScore()
+	title = nil
 }

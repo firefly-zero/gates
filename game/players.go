@@ -22,8 +22,7 @@ func (ps *Players) update() {
 	g := gates.current
 	if g != nil {
 		if ps.collides(g) {
-			// TODO: game over
-			score.val = 0
+			openTitle()
 		} else {
 			g.passed = true
 			score.inc()
