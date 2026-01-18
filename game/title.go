@@ -17,7 +17,7 @@ func openTitle() {
 
 func (t *Title) update() {
 	btns := firefly.ReadButtons(firefly.Combined)
-	if btns.S {
+	if btns.AnyPressed() {
 		resetGame()
 	}
 
@@ -42,9 +42,14 @@ func (t *Title) render() {
 	}
 
 	{
-		t := "press S to start"
+		t := "press E to start"
 		p := firefly.P((firefly.Width-font.LineWidth(t))/2, firefly.Height-16)
 		font.Draw(t, p, firefly.ColorLightGray)
+
+		extraR := 3
+		p = firefly.P(p.X+font.CharWidth()*6-extraR, p.Y-font.CharHeight()-extraR+1)
+		s := firefly.Outlined(firefly.ColorLightGray, 1)
+		firefly.DrawCircle(p, font.CharHeight()+extraR*2, s)
 	}
 
 	for _, g := range t.gates {
