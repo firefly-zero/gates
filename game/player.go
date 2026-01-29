@@ -17,6 +17,7 @@ const (
 )
 
 type Player struct {
+	me          bool
 	peer        firefly.Peer
 	angles      [3]firefly.Angle
 	anglesIndex int
@@ -60,15 +61,17 @@ func (p *Player) render() {
 	player := p.angles[p.anglesIndex]
 	x := firefly.Width/2 + playerOrbit*tinymath.Cos(player.Radians())
 	y := firefly.Height/2 - playerOrbit*tinymath.Sin(player.Radians())
-	firefly.DrawCircle(
-		firefly.P(int(x)-playerR, int(y)-playerR),
-		playerR*2,
-		firefly.Style{
-			FillColor:   firefly.ColorBlue,
-			StrokeColor: firefly.ColorLightBlue,
-			StrokeWidth: 1,
-		},
-	)
+	style := firefly.Style{
+		FillColor:   firefly.ColorBlue,
+		StrokeColor: firefly.ColorLightBlue,
+		StrokeWidth: 1,
+	}
+	if !p.me {
+		style.FillColor = firefly.ColorLightGray
+		style.StrokeColor = firefly.ColorGray
+	}
+	point := firefly.P(int(x)-playerR, int(y)-playerR)
+	firefly.DrawCircle(point, playerR*2, style)
 	p.drawTrail(player, x, y)
 }
 
@@ -88,10 +91,14 @@ func (p *Player) drawTrail(player firefly.Angle, x, y float32) {
 	xTrail := x + trailSize*tinymath.Cos(oldPlayer.Radians())
 	yTrail := y - trailSize*tinymath.Sin(oldPlayer.Radians())
 
+	color := firefly.ColorBlue
+	if !p.me {
+		color = firefly.ColorLightGray
+	}
 	firefly.DrawTriangle(
 		firefly.P(int(xLeft), int(yLeft)),
 		firefly.P(int(xRight), int(yRight)),
 		firefly.P(int(xTrail), int(yTrail)),
-		firefly.Solid(firefly.ColorBlue),
+		firefly.Solid(color),
 	)
 }

@@ -8,9 +8,13 @@ type Players struct {
 
 func newPlayers() *Players {
 	peers := firefly.GetPeers()
+	me := firefly.GetMe()
 	players := make([]*Player, peers.Len())
 	for i, peer := range peers.Slice() {
-		players[i] = &Player{peer: peer}
+		players[i] = &Player{
+			me:   peer == me,
+			peer: peer,
+		}
 	}
 	return &Players{items: players}
 }
