@@ -7,10 +7,22 @@ type Players struct {
 }
 
 func newPlayers() *Players {
-	peers := firefly.GetPeers()
+	peers := firefly.GetPeers().Slice()
 	me := firefly.GetMe()
-	players := make([]*Player, peers.Len())
-	for i, peer := range peers.Slice() {
+
+	// Put the current player last on the list
+	// so that it is always rendered on top.
+	for i, peer := range peers {
+		if peer == me {
+			lastIdx := len(peers) - 1
+			last := peers[lastIdx]
+			peers[lastIdx] = peer
+			peers[i] = last
+		}
+	}
+
+	players := make([]*Player, len(peers))
+	for i, peer := range peers {
 		players[i] = &Player{
 			me:   peer == me,
 			peer: peer,
