@@ -17,7 +17,7 @@ func openTitle() {
 
 func (t *Title) update() {
 	btns := firefly.ReadButtons(firefly.Combined)
-	if btns.AnyPressed() {
+	if btns.Any() {
 		resetGame()
 	}
 

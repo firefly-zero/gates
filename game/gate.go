@@ -79,13 +79,10 @@ func getAngleInc(count int) float32 {
 }
 
 func (g *Gate) update() bool {
-	const x = 0.0
-	const d = 8.0
+	const d = 16.0 // lower the value, faster the gates
 	const radius = 8.0
 	g.z = g.z - 0.2
-	xLeft := (x - radius) * d / g.z
-	xRight := (x + radius) * d / g.z
-	newRadius := xRight - xLeft
+	newRadius := radius * d / g.z
 	g.radius = newRadius
 	newAngle := g.angle.Radians() + g.angleInc.Radians()
 	if newAngle > tinymath.Tau {
