@@ -17,14 +17,17 @@ const (
 )
 
 type Player struct {
-	me          bool
-	peer        firefly.Peer
-	angles      [3]firefly.Angle
-	anglesIndex int
+	me     bool
+	peer   firefly.Peer
+	angles [3]firefly.Angle
 }
 
 func (p *Player) update() {
-	player := p.angles[p.anglesIndex]
+	player := p.angles[0]
+	for i := len(p.angles) - 1; i > 0; i-- {
+		p.angles[i] = p.angles[i-1]
+	}
+
 	pad, touched := firefly.ReadPad(p.peer)
 	if !touched {
 		return
@@ -41,15 +44,11 @@ func (p *Player) update() {
 		player = player.Add(firefly.Radians(delta))
 	}
 
-	p.anglesIndex = p.anglesIndex + 1
-	if p.anglesIndex >= len(p.angles) {
-		p.anglesIndex = 0
-	}
-	p.angles[p.anglesIndex] = player
+	p.angles[0] = player
 }
 
 func (p *Player) collides(g *Gate) bool {
-	player := p.angles[p.anglesIndex].Normalize().Radians()
+	player := p.angles[0].Normalize().Radians()
 	gate := g.angle.Normalize().Radians()
 	if player < gate {
 		player += tinymath.Tau
@@ -58,7 +57,7 @@ func (p *Player) collides(g *Gate) bool {
 }
 
 func (p *Player) render() {
-	player := p.angles[p.anglesIndex]
+	player := p.angles[0]
 	x := firefly.Width/2 + playerOrbit*tinymath.Cos(player.Radians())
 	y := firefly.Height/2 - playerOrbit*tinymath.Sin(player.Radians())
 	style := firefly.Style{
@@ -83,10 +82,7 @@ func (p *Player) drawTrail(player firefly.Angle, x, y float32) {
 	yLeft := y + yDiff
 	xRight := x + xDiff
 	yRight := y - yDiff
-	oldIndex := p.anglesIndex - (len(p.angles) - 1)
-	if oldIndex < 0 {
-		oldIndex = oldIndex + len(p.angles)
-	}
+	oldIndex := len(p.angles) - 1
 	oldPlayer := p.angles[oldIndex]
 	xTrail := x + trailSize*tinymath.Cos(oldPlayer.Radians())
 	yTrail := y - trailSize*tinymath.Sin(oldPlayer.Radians())
